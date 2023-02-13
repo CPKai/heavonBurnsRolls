@@ -16,7 +16,6 @@ var (
 	nextPng         string  = "img/step-next.png"
 	firstGacha      string  = "img/step-firstGacha.png"
 	firstGacha2     string  = "img/step-firstGacha2.png"
-	teachHand       string  = "img/step-teachHand.png"
 	storyChoose     string  = "img/step-storyChoose.png"
 	atGachaPage     string  = "img/step-atGachaPage.png"
 	abPool          string  = "img/gacha-abPool.png"
@@ -34,6 +33,22 @@ var (
 	menuOfFirstPage string  = "img/step-menuOfFirstPage.png"
 	deleteAccount   string  = "img/step-deleteAccount.png"
 	deleteAccount2  string  = "img/step-deleteAccount2.png"
+	teachHand1      string  = "img/step-teachHand1.png"
+	teachHand2      string  = "img/step-teachHand2.png"
+	teachHand3      string  = "img/step-teachHand3.png"
+	teachHand4      string  = "img/step-teachHand4.png"
+	teachHand5      string  = "img/step-teachHand5.png"
+	teachHand6      string  = "img/step-teachHand6.png"
+	teachHand7      string  = "img/step-teachHand7.png"
+	teachHand8      string  = "img/step-teachHand8.png"
+	teachHand9      string  = "img/step-teachHand9.png"
+	teachHand10     string  = "img/step-teachHand10.png"
+	teachHand11     string  = "img/step-teachHand11.png"
+	teachHand12     string  = "img/step-teachHand12.png"
+	teachHand13     string  = "img/step-teachHand13.png"
+	teachHand14     string  = "img/step-teachHand14.png"
+	returnFirstPage string  = "img/step-returnFirstPage.png"
+	gachaResult     string  = "img/gacha-result.png"
 )
 
 func main() {
@@ -71,8 +86,8 @@ func rollGacha() {
 
 }
 
-func findImageOnScreen(phaseNum float64, imgPath string, sp_tolerance float64, useESC bool, useEnter bool, clickTarget bool) {
-	fmt.Printf("phaseNum:%v\n", phaseNum)
+func findImageOnScreen(phaseNum string, imgPath string, sp_tolerance float64, useESC bool, useEnter bool, clickTarget bool) {
+	fmt.Printf("phaseNum:%v\t", phaseNum)
 	fmt.Printf("imgPath:%s\n", imgPath)
 	for true {
 		if useESC {
@@ -83,6 +98,7 @@ func findImageOnScreen(phaseNum float64, imgPath string, sp_tolerance float64, u
 			robotgo.KeyTap("enter")
 			robotgo.Sleep(1)
 		}
+		robotgo.KeyTap("lctrl")
 		robotgo.Sleep(1)
 		bitmap_screen := robotgo.CaptureScreen(0, 0, screenWidth, screenLength)
 		fx, fy := robotgo.FindPic(imgPath, bitmap_screen, sp_tolerance)
@@ -94,121 +110,71 @@ func findImageOnScreen(phaseNum float64, imgPath string, sp_tolerance float64, u
 			break
 		}
 		robotgo.FreeBitmap(bitmap_screen)
+		// robotgo.KeyUp("lctrl")
 	}
 }
 
 func phaseBegin() {
-	bitmap_screen := robotgo.CaptureScreen(0, 0, screenWidth, screenLength)
-	robotgo.FreeBitmap(bitmap_screen)
-
 	// wait 繁體中文 and click
-	findImageOnScreen(1.1, chooseLang, tolerance, false, false, true)
+	findImageOnScreen("1.1", chooseLang, tolerance, false, false, true)
 
 	// ok
 	// ok
 	// 同意
 	// clickToLogin(atFirstPage.png)
-	findImageOnScreen(1.2, autoCtrl, tolerance, false, true, false)
+	findImageOnScreen("1.2", autoCtrl, tolerance, false, true, false)
 }
 
 func phaseStory() {
-	var ()
-
-	bitmap_screen := robotgo.CaptureScreen(0, 0, screenWidth, screenLength)
-	robotgo.FreeBitmap(bitmap_screen)
 
 	// step - autoCtrl
-	fmt.Println("p2.1")
-	for true {
-		robotgo.Sleep(1)
-		bitmap_screen = robotgo.CaptureScreen(0, 0, screenWidth, screenLength)
-		fx, fy := robotgo.FindPic(autoCtrl, bitmap_screen, tolerance-0.1)
-		if fx != -1 && fy != -1 {
-			robotgo.MoveClick(fx, fy, "left", false)
-			robotgo.FreeBitmap(bitmap_screen)
-			break
-		}
-		robotgo.FreeBitmap(bitmap_screen)
-	}
+	findImageOnScreen("2.1", autoCtrl, tolerance-0.1, false, false, true)
 	// step - autoCtrl
-	fmt.Println("p2.2")
-	for true {
-		robotgo.Sleep(1)
-		bitmap_screen = robotgo.CaptureScreen(0, 0, screenWidth, screenLength)
-		fx, fy := robotgo.FindPic(autoCtrl, bitmap_screen, tolerance-0.1)
-		if fx != -1 && fy != -1 {
-			robotgo.MoveClick(fx, fy, "left", false)
-			robotgo.FreeBitmap(bitmap_screen)
-			break
-		}
-		robotgo.FreeBitmap(bitmap_screen)
-	}
+	findImageOnScreen("2.2", autoCtrl, tolerance-0.1, false, false, true)
 	// step - next
 	// step - next
 	// step - endTeach
 	// step - tryGacha
-	fmt.Println("p2.3")
-	for true {
-		bitmap_screen = robotgo.CaptureScreen(0, 0, screenWidth, screenLength)
-		fx, fy := robotgo.FindPic(nextPng, bitmap_screen, tolerance)
-		if fx != -1 && fy != -1 {
-			robotgo.MoveClick(fx, fy, "left", false)
-			robotgo.KeyTap("enter")
-			robotgo.Sleep(1)
-			robotgo.KeyTap("enter")
-			robotgo.Sleep(1)
-			robotgo.KeyTap("esc")
-			robotgo.Sleep(1)
-			robotgo.KeyTap("enter")
-			robotgo.FreeBitmap(bitmap_screen)
-			break
-		}
-		robotgo.FreeBitmap(bitmap_screen)
-	}
+
+	findImageOnScreen("2.3", nextPng, tolerance, false, false, true)
+	findImageOnScreen("2.4", nextPng, tolerance, false, false, true)
+	robotgo.Sleep(1)
+	robotgo.KeyTap("esc")
+	robotgo.Sleep(1)
+	robotgo.KeyTap("enter")
+
+	// fmt.Println("p2.3")
+	// for true {
+	// 	bitmap_screen := robotgo.CaptureScreen(0, 0, screenWidth, screenLength)
+	// 	fx, fy := robotgo.FindPic(nextPng, bitmap_screen, tolerance)
+	// 	if fx != -1 && fy != -1 {
+	// 		robotgo.MoveClick(fx, fy, "left", false)
+	// 		robotgo.KeyTap("enter")
+	// 		robotgo.Sleep(1)
+	// 		robotgo.KeyTap("enter")
+	// 		robotgo.Sleep(1)
+	// 		robotgo.KeyTap("esc")
+	// 		robotgo.Sleep(1)
+	// 		robotgo.KeyTap("enter")
+	// 		robotgo.FreeBitmap(bitmap_screen)
+	// 		break
+	// 	}
+	// 	robotgo.FreeBitmap(bitmap_screen)
+	// }
 
 	// step - firstGacha
-	fmt.Println("p2.4")
-	for true {
-		robotgo.Sleep(2)
-		bitmap_screen = robotgo.CaptureScreen(0, 0, screenWidth, screenLength)
-		fx, fy := robotgo.FindPic(firstGacha, bitmap_screen, tolerance)
-		if fx != -1 && fy != -1 {
-			robotgo.MoveClick(fx, fy, "left", false)
-			robotgo.FreeBitmap(bitmap_screen)
-			break
-		}
-		robotgo.FreeBitmap(bitmap_screen)
-	}
+	findImageOnScreen("2.5", firstGacha, tolerance, false, false, true)
 
 	// stop - firstGacha2
-	fmt.Println("p2.5")
-	for true {
-		robotgo.Sleep(2)
-		bitmap_screen = robotgo.CaptureScreen(0, 0, screenWidth, screenLength)
-		fx, fy := robotgo.FindPic(firstGacha2, bitmap_screen, tolerance)
-		if fx != -1 && fy != -1 {
-			robotgo.MoveClick(fx, fy, "left", false)
-			robotgo.FreeBitmap(bitmap_screen)
-			break
-		}
-		robotgo.FreeBitmap(bitmap_screen)
-	}
+	robotgo.Sleep(2)
+	findImageOnScreen("2.6", firstGacha2, tolerance, false, false, true)
+	robotgo.Sleep(2)
+
+	// findImageOnScreen(2.51, ok_png, tolerance+0.05, true, true, true)
+	// findImageOnScreen(2.6, autoCtrl, tolerance-0.1, true, true, true)
+
 	// click loop until autoCtrl
-	fmt.Println("p2.6")
-	for true {
-		robotgo.KeyTap("enter")
-		robotgo.Sleep(1)
-		robotgo.KeyTap("esc")
-		bitmap_screen = robotgo.CaptureScreen(0, 0, screenWidth, screenLength)
-		fx, fy := robotgo.FindPic(autoCtrl, bitmap_screen, tolerance)
-		if fx != -1 && fy != -1 {
-			robotgo.MoveClick(fx, fy, "left", false)
-			robotgo.FreeBitmap(bitmap_screen)
-			break
-		}
-		robotgo.FreeBitmap(bitmap_screen)
-		robotgo.Sleep(1)
-	}
+	// findImageOnScreen(2.61, autoCtrl, tolerance-0.1, true, true, true)
 
 	// wait until step-teachHand
 	// teachHand
@@ -217,76 +183,23 @@ func phaseStory() {
 	// click one time
 	// teachHand
 	// teachHand(至此每個teachHand位置皆不同)
-	fmt.Println("p2.7")
-	teachHandCount := 0
-	for true {
-		bitmap_screen2 := robotgo.CaptureScreen(0, 0, screenWidth, screenLength)
-		fx, fy := robotgo.FindPic(teachHand, bitmap_screen2, tolerance)
-		if fx != -1 && fy != -1 {
-			fmt.Println("p2.71")
-			teachHandCount = teachHandCount + 1
-			robotgo.MoveClick(fx, fy, "left", false)
-			robotgo.FreeBitmap(bitmap_screen2)
-			fmt.Println("p2.72")
-			if teachHandCount == 4 {
-				fmt.Println("p2.73")
-				robotgo.KeyTap("enter")
-			} else if teachHandCount == 6 {
-				fmt.Println("p2.74")
-				break
-			}
-		}
-		fmt.Println("p2.75")
-		robotgo.FreeBitmap(bitmap_screen2)
-	}
+	findImageOnScreen("2.7", teachHand1, tolerance, true, true, true)
+	findImageOnScreen("2.8", teachHand2, tolerance, false, false, true)
+	findImageOnScreen("2.9", teachHand3, tolerance, false, false, true)
+	findImageOnScreen("2.10", teachHand4, tolerance, false, false, true)
+	robotgo.Sleep(2)
+	robotgo.KeyTap("enter")
+	findImageOnScreen("2.11", teachHand5, tolerance, false, false, true)
+	findImageOnScreen("2.12", teachHand6, tolerance, false, false, true)
 
 	// click until autoCtrl
-	fmt.Println("p2.8")
-	for true {
-		robotgo.KeyTap("esc")
-		robotgo.KeyTap("enter")
-		bitmap_screen = robotgo.CaptureScreen(0, 0, screenWidth, screenLength)
-		fx, fy := robotgo.FindPic(autoCtrl, bitmap_screen, tolerance)
-		if fx != -1 && fy != -1 {
-			robotgo.MoveClick(fx, fy, "left", false)
-			robotgo.FreeBitmap(bitmap_screen)
-			break
-		}
-		robotgo.FreeBitmap(bitmap_screen)
-		robotgo.Sleep(1)
-	}
+	findImageOnScreen("2.13", autoCtrl, tolerance, true, true, true)
 
 	// wait storyChoose
-	fmt.Println("p2.9")
-	for true {
-		robotgo.KeyTap("esc")
-		robotgo.KeyTap("enter")
-		bitmap_screen = robotgo.CaptureScreen(0, 0, screenWidth, screenLength)
-		fx, fy := robotgo.FindPic(storyChoose, bitmap_screen, tolerance)
-		if fx != -1 && fy != -1 {
-			robotgo.MoveClick(fx, fy, "left", false)
-			robotgo.FreeBitmap(bitmap_screen)
-			break
-		}
-		robotgo.FreeBitmap(bitmap_screen)
-		robotgo.Sleep(1)
-	}
+	findImageOnScreen("2.14", storyChoose, tolerance, false, false, true)
 
 	// wait autoCtrl
-	fmt.Println("p2.10")
-	for true {
-		robotgo.KeyTap("esc")
-		robotgo.KeyTap("enter")
-		bitmap_screen = robotgo.CaptureScreen(0, 0, screenWidth, screenLength)
-		fx, fy := robotgo.FindPic(autoCtrl, bitmap_screen, tolerance)
-		if fx != -1 && fy != -1 {
-			robotgo.MoveClick(fx, fy, "left", false)
-			robotgo.FreeBitmap(bitmap_screen)
-			break
-		}
-		robotgo.FreeBitmap(bitmap_screen)
-		robotgo.Sleep(1)
-	}
+	findImageOnScreen("2.15", autoCtrl, tolerance, true, true, true)
 
 	// wait day00end
 	// keep click until teachHand
@@ -295,333 +208,118 @@ func phaseStory() {
 	// teachHand
 	// teachHand
 	// teachHand
-	fmt.Println("p2.11")
-	teachHandCount = 0
-	for true {
-		robotgo.KeyTap("esc")
-		robotgo.KeyTap("enter")
-		bitmap_screen = robotgo.CaptureScreen(0, 0, screenWidth, screenLength)
-		fx, fy := robotgo.FindPic(teachHand, bitmap_screen, tolerance)
-		if fx != -1 && fy != -1 {
-			teachHandCount++
-			robotgo.MoveClick(fx, fy, "left", false)
-			robotgo.FreeBitmap(bitmap_screen)
-			if teachHandCount == 6 {
-				break
-			}
-		}
-		robotgo.FreeBitmap(bitmap_screen)
-		robotgo.Sleep(1)
-	}
+	findImageOnScreen("2.16", teachHand7, tolerance, false, true, true)
+	findImageOnScreen("2.17", teachHand8, tolerance, false, false, true)
+	findImageOnScreen("2.18", teachHand9, tolerance, false, false, true)
+	robotgo.Sleep(2)
+	findImageOnScreen("2.19", teachHand10, tolerance, false, false, true)
+	robotgo.Sleep(2)
+	findImageOnScreen("2.20", teachHand11, tolerance, false, false, true)
+	findImageOnScreen("2.21", teachHand12, tolerance, false, false, true)
+	// fmt.Println("p2.11")
+	// teachHandCount = 0
+	// for true {
+	// 	robotgo.KeyTap("esc")
+	// 	robotgo.KeyTap("enter")
+	// 	bitmap_screen := robotgo.CaptureScreen(0, 0, screenWidth, screenLength)
+	// 	fx, fy := robotgo.FindPic(teachHand, bitmap_screen, tolerance)
+	// 	if fx != -1 && fy != -1 {
+	// 		teachHandCount++
+	// 		robotgo.MoveClick(fx, fy, "left", false)
+	// 		robotgo.FreeBitmap(bitmap_screen)
+	// 		if teachHandCount == 6 {
+	// 			break
+	// 		}
+	// 	}
+	// 	robotgo.FreeBitmap(bitmap_screen)
+	// 	robotgo.Sleep(1)
+	// }
 	// wait until atGachaPage
 
 }
 
 func phaseGacha() {
-	var ()
+	findImageOnScreen("3.1", atGachaPage, tolerance, false, false, false)
+	// GachaPageCheck:
+	// 	fmt.Println("p3.1")
+	// 	bitmap_screen := robotgo.CaptureScreen(0, 0, screenWidth, screenLength)
+	// 	fx, fy := robotgo.FindPic(atGachaPage, bitmap_screen, tolerance)
+	// 	if fx != -1 && fy != -1 {
+	// 		robotgo.MoveClick(fx, fy, "left", false)
+	// 		robotgo.FreeBitmap(bitmap_screen)
+	// 		goto RollAngelBeatPool
+	// 	}
+	// 	robotgo.FreeBitmap(bitmap_screen)
+	// 	goto GachaPageCheck
 
-GachaPageCheck:
-	fmt.Println("p3.1")
-	bitmap_screen := robotgo.CaptureScreen(0, 0, screenWidth, screenLength)
-	fx, fy := robotgo.FindPic(atGachaPage, bitmap_screen, tolerance)
-	if fx != -1 && fy != -1 {
-		robotgo.MoveClick(fx, fy, "left", false)
-		robotgo.FreeBitmap(bitmap_screen)
-		goto RollAngelBeatPool
-	}
-	robotgo.FreeBitmap(bitmap_screen)
-	goto GachaPageCheck
-
-RollAngelBeatPool:
-	fmt.Println("p3.2")
 	// E 3 times
 	for i := 0; i < 3; i++ {
 		robotgo.KeyTap("e")
-		robotgo.Sleep(1)
+		robotgo.Sleep(2)
 	}
 
 	// gacha-abPool
-	for true {
-		fmt.Println("p3.3")
-		bitmap_screen = robotgo.CaptureScreen(0, 0, screenWidth, screenLength)
-		fx, fy = robotgo.FindPic(abPool, bitmap_screen, tolerance)
-		if fx != -1 && fy != -1 {
-			robotgo.MoveClick(fx, fy, "left", false)
-			robotgo.FreeBitmap(bitmap_screen)
-			break
-		}
-		robotgo.FreeBitmap(bitmap_screen)
-	}
+	findImageOnScreen("3.2", abPool, tolerance, false, false, true)
 	// gacha-abPool2
-	for true {
-		fmt.Println("p3.4")
-		bitmap_screen = robotgo.CaptureScreen(0, 0, screenWidth, screenLength)
-		fx, fy = robotgo.FindPic(abPool2, bitmap_screen, tolerance)
-		if fx != -1 && fy != -1 {
-			robotgo.MoveClick(fx, fy, "left", false)
-			robotgo.FreeBitmap(bitmap_screen)
-			break
-		}
-		robotgo.FreeBitmap(bitmap_screen)
-	}
+	findImageOnScreen("3.3", abPool2, tolerance, false, false, true)
 	// keep enter until rollAgain and click rollAgain
-	for true {
-		fmt.Println("p3.5")
-		robotgo.KeyTap("enter")
-		bitmap_screen = robotgo.CaptureScreen(0, 0, screenWidth, screenLength)
-		fx, fy = robotgo.FindPic(rollAgain, bitmap_screen, tolerance)
-		if fx != -1 && fy != -1 {
-			robotgo.MoveClick(fx, fy, "left", false)
-			robotgo.FreeBitmap(bitmap_screen)
-			break
-		}
-		robotgo.FreeBitmap(bitmap_screen)
-	}
+	findImageOnScreen("3.4", rollAgain, tolerance, false, true, true)
 	// gacha-abPool2
-	for true {
-		fmt.Println("p3.6")
-		bitmap_screen = robotgo.CaptureScreen(0, 0, screenWidth, screenLength)
-		fx, fy = robotgo.FindPic(abPool2, bitmap_screen, tolerance)
-		if fx != -1 && fy != -1 {
-			robotgo.MoveClick(fx, fy, "left", false)
-			robotgo.FreeBitmap(bitmap_screen)
-			break
-		}
-		robotgo.FreeBitmap(bitmap_screen)
-	}
+	findImageOnScreen("3.5", abPool2, tolerance, false, false, true)
 	// keep enter until rollAgain
-	// esc
-	for true {
-		fmt.Println("p3.7")
-		robotgo.KeyTap("enter")
-		bitmap_screen = robotgo.CaptureScreen(0, 0, screenWidth, screenLength)
-		fx, fy = robotgo.FindPic(rollAgain, bitmap_screen, tolerance)
-		if fx != -1 && fy != -1 {
-			robotgo.KeyTap("esc")
-			break
-		}
-		robotgo.FreeBitmap(bitmap_screen)
-	}
+	findImageOnScreen("3.6", rollAgain, tolerance, false, true, false)
+	robotgo.KeyTap("esc")
 	// wait until gacha-abPool
+	findImageOnScreen("3.7", atGachaPage, tolerance, false, false, false)
 	// E 3 times
-	for true {
-		fmt.Println("p3.8")
-		bitmap_screen = robotgo.CaptureScreen(0, 0, screenWidth, screenLength)
-		fx, fy = robotgo.FindPic(abPool, bitmap_screen, tolerance)
-		if fx != -1 && fy != -1 {
-			for i := 0; i < 3; i++ {
-				robotgo.KeyTap("e")
-				robotgo.Sleep(1)
-			}
-			robotgo.FreeBitmap(bitmap_screen)
-			break
-		}
-		robotgo.FreeBitmap(bitmap_screen)
+	for i := 0; i < 3; i++ {
+		robotgo.KeyTap("e")
+		robotgo.Sleep(2)
 	}
-
 	// gacha-pinkPool
-	for true {
-		fmt.Println("p3.9")
-		bitmap_screen = robotgo.CaptureScreen(0, 0, screenWidth, screenLength)
-		fx, fy = robotgo.FindPic(pinkPool, bitmap_screen, tolerance)
-		if fx != -1 && fy != -1 {
-			robotgo.MoveClick(fx, fy, "left", false)
-			robotgo.FreeBitmap(bitmap_screen)
-			break
-		}
-		robotgo.FreeBitmap(bitmap_screen)
-	}
+	findImageOnScreen("3.8", pinkPool, tolerance, false, false, true)
 	// gacha-abPool2
-	for true {
-		fmt.Println("p3.10")
-		bitmap_screen = robotgo.CaptureScreen(0, 0, screenWidth, screenLength)
-		fx, fy = robotgo.FindPic(abPool2, bitmap_screen, tolerance)
-		if fx != -1 && fy != -1 {
-			robotgo.MoveClick(fx, fy, "left", false)
-			robotgo.FreeBitmap(bitmap_screen)
-			break
-		}
-		robotgo.FreeBitmap(bitmap_screen)
-	}
-	// keep enter until ok and click it
-	for true {
-		fmt.Println("p3.11")
-		robotgo.KeyTap("enter")
-		bitmap_screen = robotgo.CaptureScreen(0, 0, screenWidth, screenLength)
-		fx, fy = robotgo.FindPic(ok_png, bitmap_screen, tolerance)
-		if fx != -1 && fy != -1 {
-			robotgo.MoveClick(fx, fy, "left", false)
-			robotgo.FreeBitmap(bitmap_screen)
-			break
-		}
-		robotgo.FreeBitmap(bitmap_screen)
-	}
+	findImageOnScreen("3.9", abPool2, tolerance, false, false, true)
+	findImageOnScreen("3.10", gachaResult, tolerance, false, true, true)
 	// wait until atGachaPage
+	findImageOnScreen("3.11", atGachaPage, tolerance+0.05, false, false, false)
 	// E 5 times
-	for true {
-		fmt.Println("p3.12")
-		bitmap_screen := robotgo.CaptureScreen(0, 0, screenWidth, screenLength)
-		fx, fy := robotgo.FindPic(atGachaPage, bitmap_screen, tolerance)
-		if fx != -1 && fy != -1 {
-			for i := 0; i < 5; i++ {
-				robotgo.KeyTap("e")
-				robotgo.Sleep(1)
-			}
-			robotgo.FreeBitmap(bitmap_screen)
-			break
-		}
-		robotgo.FreeBitmap(bitmap_screen)
+	for i := 0; i < 5; i++ {
+		robotgo.KeyTap("e")
+		robotgo.Sleep(2)
 	}
 	// gacha-bluePool
-	for true {
-		fmt.Println("p3.13")
-		bitmap_screen = robotgo.CaptureScreen(0, 0, screenWidth, screenLength)
-		fx, fy = robotgo.FindPic(bluePool, bitmap_screen, tolerance)
-		if fx != -1 && fy != -1 {
-			robotgo.MoveClick(fx, fy, "left", false)
-			robotgo.FreeBitmap(bitmap_screen)
-			break
-		}
-		robotgo.FreeBitmap(bitmap_screen)
-	}
+	findImageOnScreen("3.12", bluePool, tolerance, false, false, true)
 	// gacha-abPool2
-	for true {
-		fmt.Println("p3.14")
-		bitmap_screen = robotgo.CaptureScreen(0, 0, screenWidth, screenLength)
-		fx, fy = robotgo.FindPic(abPool2, bitmap_screen, tolerance)
-		if fx != -1 && fy != -1 {
-			robotgo.MoveClick(fx, fy, "left", false)
-			robotgo.FreeBitmap(bitmap_screen)
-			break
-		}
-		robotgo.FreeBitmap(bitmap_screen)
-	}
+	findImageOnScreen("3.13", abPool2, tolerance, false, false, true)
 	// keep enter until rollAgain and click rollAgain
-	for true {
-		fmt.Println("p3.15")
-		robotgo.KeyTap("enter")
-		bitmap_screen = robotgo.CaptureScreen(0, 0, screenWidth, screenLength)
-		fx, fy = robotgo.FindPic(rollAgain, bitmap_screen, tolerance)
-		if fx != -1 && fy != -1 {
-			robotgo.MoveClick(fx, fy, "left", false)
-			robotgo.FreeBitmap(bitmap_screen)
-			break
-		}
-		robotgo.FreeBitmap(bitmap_screen)
-	}
+	findImageOnScreen("3.14", rollAgain, tolerance, false, true, true)
 	// gacha-abPool2
-	for true {
-		fmt.Println("p3.16")
-		bitmap_screen = robotgo.CaptureScreen(0, 0, screenWidth, screenLength)
-		fx, fy = robotgo.FindPic(abPool2, bitmap_screen, tolerance)
-		if fx != -1 && fy != -1 {
-			robotgo.MoveClick(fx, fy, "left", false)
-			robotgo.FreeBitmap(bitmap_screen)
-			break
-		}
-		robotgo.FreeBitmap(bitmap_screen)
-	}
-	// keep enter until ok
-	for true {
-		fmt.Println("p3.17")
-		robotgo.KeyTap("enter")
-		bitmap_screen = robotgo.CaptureScreen(0, 0, screenWidth, screenLength)
-		fx, fy = robotgo.FindPic(ok_png, bitmap_screen, tolerance)
-		if fx != -1 && fy != -1 {
-			robotgo.MoveClick(fx, fy, "left", false)
-			robotgo.FreeBitmap(bitmap_screen)
-			break
-		}
-		robotgo.FreeBitmap(bitmap_screen)
-	}
-
+	findImageOnScreen("3.15", abPool2, tolerance, false, false, true)
+	findImageOnScreen("3.16", gachaResult, tolerance, false, true, true)
 	// wait until atGachaPage
+	findImageOnScreen("3.17", atGachaPage, tolerance, false, false, false)
 	// esc
-	for true {
-		fmt.Println("p3.18")
-		bitmap_screen := robotgo.CaptureScreen(0, 0, screenWidth, screenLength)
-		fx, fy := robotgo.FindPic(atGachaPage, bitmap_screen, tolerance)
-		if fx != -1 && fy != -1 {
-			robotgo.KeyTap("esc")
-			robotgo.FreeBitmap(bitmap_screen)
-			break
-		}
-		robotgo.FreeBitmap(bitmap_screen)
-	}
+	robotgo.KeyTap("esc")
 
 	// wait until mainPage
 	// click mainPage (enter?)
 	// enter(?)
 	// keep esc until mainPage
-	for true {
-		fmt.Println("p3.19")
-		robotgo.KeyTap("enter")
-		robotgo.KeyTap("esc")
-		bitmap_screen = robotgo.CaptureScreen(0, 0, screenWidth, screenLength)
-		fx, fy = robotgo.FindPic(mainPage, bitmap_screen, tolerance)
-		if fx != -1 && fy != -1 {
-			robotgo.FreeBitmap(bitmap_screen)
-			break
-		}
-		robotgo.FreeBitmap(bitmap_screen)
-	}
+	findImageOnScreen("3.18", mainPage, tolerance-0.15, true, true, false)
 }
 
 func phaseCheck() bool {
-	var ()
 	// 進選單
-	for true {
-		fmt.Println("p4.1")
-		bitmap_screen := robotgo.CaptureScreen(0, 0, screenWidth, screenLength)
-		fx, fy := robotgo.FindPic(mainPage, bitmap_screen, tolerance)
-		if fx != -1 && fy != -1 {
-			robotgo.MoveClick(fx, fy, "left", false)
-			robotgo.FreeBitmap(bitmap_screen)
-			break
-		}
-		robotgo.FreeBitmap(bitmap_screen)
-	}
+	findImageOnScreen("4.1", mainPage, tolerance, false, false, true)
 	// 進小隊頁
-	for true {
-		fmt.Println("p4.2")
-		bitmap_screen := robotgo.CaptureScreen(0, 0, screenWidth, screenLength)
-		fx, fy := robotgo.FindPic(team, bitmap_screen, tolerance)
-		if fx != -1 && fy != -1 {
-			robotgo.MoveClick(fx, fy, "left", false)
-			robotgo.FreeBitmap(bitmap_screen)
-			break
-		}
-		robotgo.FreeBitmap(bitmap_screen)
-	}
+	findImageOnScreen("4.2", team, tolerance, false, false, true)
 	//進篩選頁
-	for true {
-		fmt.Println("p4.3")
-		bitmap_screen := robotgo.CaptureScreen(0, 0, screenWidth, screenLength)
-		fx, fy := robotgo.FindPic(teamFilter, bitmap_screen, tolerance)
-		if fx != -1 && fy != -1 {
-			robotgo.MoveClick(fx, fy, "left", false)
-			robotgo.FreeBitmap(bitmap_screen)
-			break
-		}
-		robotgo.FreeBitmap(bitmap_screen)
-	}
+	findImageOnScreen("4.3", teamFilter, tolerance, false, false, true)
 	//篩ss & click ok
-	for true {
-		fmt.Println("p4.4")
-		bitmap_screen := robotgo.CaptureScreen(0, 0, screenWidth, screenLength)
-		fx, fy := robotgo.FindPic(teamFilterSS, bitmap_screen, tolerance)
-		if fx != -1 && fy != -1 {
-			robotgo.MoveClick(fx, fy, "left", false)
-			break
-		}
-		fx, fy = robotgo.FindPic(ok_png, bitmap_screen, tolerance)
-		if fx != -1 && fy != -1 {
-			robotgo.MoveClick(fx, fy, "left", false)
-			robotgo.FreeBitmap(bitmap_screen)
-			break
-		}
-		robotgo.FreeBitmap(bitmap_screen)
-	}
+	findImageOnScreen("4.4", teamFilterSS, tolerance, false, false, true)
+	findImageOnScreen("4.5", ok_png, tolerance, false, false, true)
+
 CheckHaveTargetOrNot:
 	fmt.Println("p4.5")
 	checkCounter := 0
@@ -640,33 +338,8 @@ CheckHaveTargetOrNot:
 }
 
 func phaseDel() {
-	var ()
-
-	// click mainPage
-	for true {
-		fmt.Println("p5.1")
-		robotgo.KeyTap("esc")
-		bitmap_screen := robotgo.CaptureScreen(0, 0, screenWidth, screenLength)
-		fx, fy := robotgo.FindPic(mainPage, bitmap_screen, tolerance)
-		if fx != -1 && fy != -1 {
-			robotgo.MoveClick(fx, fy, "left", false)
-			robotgo.FreeBitmap(bitmap_screen)
-			break
-		}
-		robotgo.FreeBitmap(bitmap_screen)
-	}
-	// wait until settings and click settings
-	for true {
-		fmt.Println("p5.2")
-		bitmap_screen := robotgo.CaptureScreen(0, 0, screenWidth, screenLength)
-		fx, fy := robotgo.FindPic(settings, bitmap_screen, tolerance)
-		if fx != -1 && fy != -1 {
-			robotgo.MoveClick(fx, fy, "left", false)
-			robotgo.FreeBitmap(bitmap_screen)
-			break
-		}
-		robotgo.FreeBitmap(bitmap_screen)
-	}
+	robotgo.KeyTap("esc")
+	findImageOnScreen("5.1", settings, tolerance, false, false, true)
 	// keep enter until teachHand and click teachHand
 	// wait until teachHand
 	// wait until keyboardCheck
@@ -676,93 +349,26 @@ func phaseDel() {
 	// 上
 	// enter
 	// OK(or enter)
-	teachHandCount := 0
-	for true {
-		fmt.Println("p5.3")
-		robotgo.KeyTap("enter")
-		bitmap_screen := robotgo.CaptureScreen(0, 0, screenWidth, screenLength)
-		fx, fy := robotgo.FindPic(teachHand, bitmap_screen, tolerance)
-		if fx != -1 && fy != -1 {
-			teachHandCount++
-			robotgo.MoveClick(fx, fy, "left", false)
-			robotgo.FreeBitmap(bitmap_screen)
-			if teachHandCount == 2 {
-				robotgo.KeyTap("enter")
-				robotgo.Sleep(1)
-				robotgo.KeyTap("esc")
-				robotgo.Sleep(1)
-				robotgo.KeyTap("up")
-				robotgo.Sleep(1)
-				robotgo.KeyTap("up")
-				robotgo.Sleep(1)
-				robotgo.KeyTap("enter")
-				robotgo.Sleep(1)
-				robotgo.KeyTap("enter")
-				break
-			}
-		}
-		robotgo.FreeBitmap(bitmap_screen)
-	}
+	findImageOnScreen("5.2", teachHand13, tolerance, false, true, true)
+	findImageOnScreen("5.3", teachHand14, tolerance, false, false, true)
+	robotgo.Sleep(2)
+	robotgo.KeyTap("enter")
+	robotgo.Sleep(2)
+	robotgo.KeyTap("esc")
+	robotgo.Sleep(2)
+	robotgo.KeyTap("up")
+	findImageOnScreen("5.4", returnFirstPage, tolerance, false, false, true)
+
 	// wait menuOfFirstPage and click it
-	for true {
-		fmt.Println("p5.4")
-		bitmap_screen := robotgo.CaptureScreen(0, 0, screenWidth, screenLength)
-		fx, fy := robotgo.FindPic(menuOfFirstPage, bitmap_screen, tolerance)
-		if fx != -1 && fy != -1 {
-			robotgo.MoveClick(fx, fy, "left", false)
-			robotgo.FreeBitmap(bitmap_screen)
-			break
-		}
-		robotgo.FreeBitmap(bitmap_screen)
-	}
+	findImageOnScreen("5.5", menuOfFirstPage, tolerance, false, false, true)
 	// wait deleteAccount and click it
-	for true {
-		fmt.Println("p5.5")
-		bitmap_screen := robotgo.CaptureScreen(0, 0, screenWidth, screenLength)
-		fx, fy := robotgo.FindPic(deleteAccount, bitmap_screen, tolerance)
-		if fx != -1 && fy != -1 {
-			robotgo.MoveClick(fx, fy, "left", false)
-			robotgo.FreeBitmap(bitmap_screen)
-			break
-		}
-		robotgo.FreeBitmap(bitmap_screen)
-	}
+	findImageOnScreen("5.6", deleteAccount, tolerance, false, false, true)
 	// wait deleteAccount2 and click it
-	for true {
-		fmt.Println("p5.6")
-		bitmap_screen := robotgo.CaptureScreen(0, 0, screenWidth, screenLength)
-		fx, fy := robotgo.FindPic(deleteAccount2, bitmap_screen, tolerance)
-		if fx != -1 && fy != -1 {
-			robotgo.MoveClick(fx, fy, "left", false)
-			robotgo.FreeBitmap(bitmap_screen)
-			break
-		}
-		robotgo.FreeBitmap(bitmap_screen)
-	}
+	findImageOnScreen("5.7", deleteAccount2, tolerance, false, false, true)
 	// OK
-	for true {
-		fmt.Println("p5.7")
-		bitmap_screen := robotgo.CaptureScreen(0, 0, screenWidth, screenLength)
-		fx, fy := robotgo.FindPic(ok_png, bitmap_screen, tolerance)
-		if fx != -1 && fy != -1 {
-			robotgo.MoveClick(fx, fy, "left", false)
-			robotgo.FreeBitmap(bitmap_screen)
-			break
-		}
-		robotgo.FreeBitmap(bitmap_screen)
-	}
+	findImageOnScreen("5.8", ok_png, tolerance, false, false, true)
 	// OK
-	for true {
-		fmt.Println("p5.8")
-		bitmap_screen := robotgo.CaptureScreen(0, 0, screenWidth, screenLength)
-		fx, fy := robotgo.FindPic(ok_png, bitmap_screen, tolerance)
-		if fx != -1 && fy != -1 {
-			robotgo.MoveClick(fx, fy, "left", false)
-			robotgo.FreeBitmap(bitmap_screen)
-			break
-		}
-		robotgo.FreeBitmap(bitmap_screen)
-	}
+	findImageOnScreen("5.9", ok_png, tolerance, false, false, true)
 
 	// (接續phaseBegin)
 
@@ -776,9 +382,9 @@ func exitEvent() {
 	}
 }
 
-func errHandler(err error, msg string) {
-	if err != nil {
-		fmt.Println(msg)
-		panic(err)
-	}
-}
+// func errHandler(err error, msg string) {
+// 	if err != nil {
+// 		fmt.Println(msg)
+// 		panic(err)
+// 	}
+// }
