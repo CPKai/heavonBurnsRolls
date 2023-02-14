@@ -1,0 +1,8 @@
+role-angel,1000
+role-starShenHua,100
+role-oriShinLo,100
+role-oriLee,100
+role-dressBaiHo,20
+role-oriShenchi,10
+role-oriTsunJin,10
+gacha-SS_pos_5,1000

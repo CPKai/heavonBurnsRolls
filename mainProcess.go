@@ -1,8 +1,10 @@
 package main
 
 import (
+	"encoding/csv"
 	"fmt"
 	"os"
+	"strconv"
 
 	"github.com/go-vgo/robotgo"
 )
@@ -49,13 +51,7 @@ var (
 	returnFirstPage string  = "img/step-returnFirstPage.png"
 	gachaResult     string  = "img/gacha-result.png"
 	freshGuide      string  = "img/step-freshGuide.png"
-	fiveSSPos       string  = "img/gacha-SS_pos_5.png"
 	roleSS          string  = "img/role-ss.png"
-	target_role_1   string  = "img/role-angel.png"
-	target_role_2   string  = "img/role-buffer1.png"
-	target_role_3   string  = "img/role-blaster2.png"
-	target_role_4   string  = "img/role-blaster1.png"
-	// dataMap         map[string]int = loadConfig("config.txt")
 )
 
 func main() {
@@ -64,18 +60,12 @@ func main() {
 	fmt.Println("開始進行首抽刷取")
 	go exitEvent()
 	rollGacha()
+	// calculateScore(loadConfig("roleConfig.txt"))
 }
 
 func rollGacha() {
 	var (
-		// cur_phase     string = ""
 		round_counter int = 0
-		// PHASE_BEGIN   int    = 0
-		// PHASE_STORY   int    = 1
-		// PHASE_GACHA   int    = 2
-		// PHASE_CHECK   int    = 3
-		// PHASE_DEL     int    = 4
-		// target_role_1 string = "img/role-angel.png"
 	)
 
 	for true {
@@ -94,25 +84,25 @@ func rollGacha() {
 
 }
 
-// func loadConfig(csvPath string) map[string]int {
+func loadConfig(csvPath string) map[string]int {
 
-// 	dataMap := make(map[string]int, 13)
-// 	csvFile, err := os.Open(csvPath)
-// 	errHandler(err, "ErrCode 003001. Open CSV file failed.")
+	dataMap := make(map[string]int, 13)
+	csvFile, err := os.Open(csvPath)
+	errHandler(err, "ErrCode 003001. Open CSV file failed.")
 
-// 	defer csvFile.Close()
+	defer csvFile.Close()
 
-// 	csvLines, err := csv.NewReader(csvFile).ReadAll()
-// 	errHandler(err, "ErrCode 003002. Read CSV file failed.")
+	csvLines, err := csv.NewReader(csvFile).ReadAll()
+	errHandler(err, "ErrCode 003002. Read CSV file failed.")
 
-// 	for _, line := range csvLines {
-// 		tempInt, err := strconv.ParseInt(line[1], 10, 64)
-// 		errHandler(err, "ErrCode 003003. Convert string to float error.")
-// 		dataMap[line[0]] = int(tempInt)
-// 	}
+	for _, line := range csvLines {
+		tempInt, err := strconv.ParseInt(line[1], 10, 64)
+		errHandler(err, "ErrCode 003003. Convert string to int error.")
+		dataMap[line[0]] = int(tempInt)
+	}
 
-// 	return dataMap
-// }
+	return dataMap
+}
 
 func errHandler(err error, msg string) {
 	if err != nil {
@@ -295,50 +285,42 @@ func phaseCheck() int {
 	findImageOnScreen("4.6", roleSS, tolerance, false, false, false)
 
 	fmt.Println("p4.7")
-	score := 0
+	var score int = calculateScore(loadConfig("roleConfig.txt"))
 
+	return score
+}
+
+func calculateScore(roleMap map[string]int) int {
+	var score int = 0
+
+	//取得screenshot
 	bitmap_screen := robotgo.CaptureScreen(0, 0, screenWidth, screenLength)
 
-	fx, fy := robotgo.FindPic(target_role_1, bitmap_screen, tolerance)
-	if fx != -1 && fy != -1 {
-		fmt.Println("已偵測到:Angel")
-		score = score + 1000
-	} else {
-		fmt.Println("未偵測到:Angel")
+	// 把roleConfig中每一組role做對照，確認有無並計分
+	for roleName, roleScore := range roleMap {
+		fmt.Printf("roleName:%v\t", roleName)
+		fmt.Printf("roleScore:%v\n", roleScore)
+
+		if roleName == "gacha-SS_pos_5" {
+			fx, fy := robotgo.FindPic("img/"+roleName+".png", bitmap_screen, tolerance)
+			if fx == -1 && fy == -1 {
+				fmt.Printf("已偵測到5號位有SS，代表有5張ss以上")
+				score = score + roleScore
+			} else {
+				fmt.Printf("未偵測到5號位有ss，代表ss不足5張")
+			}
+		} else {
+			fx, fy := robotgo.FindPic("img/"+roleName+".png", bitmap_screen, tolerance)
+			if fx != -1 && fy != -1 {
+				fmt.Printf("已偵測到:%s\n", roleName)
+				score = score + roleScore
+			} else {
+				fmt.Printf("未偵測到:%s\n", roleName)
+			}
+		}
 	}
 
-	fx, fy = robotgo.FindPic(target_role_2, bitmap_screen, tolerance)
-	if fx != -1 && fy != -1 {
-		fmt.Println("已偵測到:星羅")
-		score = score + 100
-	} else {
-		fmt.Println("未偵測到:星羅")
-	}
-
-	fx, fy = robotgo.FindPic(target_role_3, bitmap_screen, tolerance)
-	if fx != -1 && fy != -1 {
-		fmt.Println("已偵測到:金毛忍者")
-		score = score + 20
-	} else {
-		fmt.Println("未偵測到:金毛忍者")
-	}
-
-	fx, fy = robotgo.FindPic(target_role_4, bitmap_screen, tolerance)
-	if fx != -1 && fy != -1 {
-		fmt.Println("已偵測到:禮服白河")
-		score = score + 20
-	} else {
-		fmt.Println("未偵測到:禮服白河")
-	}
-
-	fx, fy = robotgo.FindPic(fiveSSPos, bitmap_screen, tolerance-0.1)
-	if fx == -1 && fy == -1 {
-		fmt.Println("已偵測到:5 SS")
-		score = score + 1000
-	} else {
-		fmt.Println("未偵測到:5 SS")
-	}
-
+	// release memory
 	robotgo.FreeBitmap(bitmap_screen)
 
 	return score
