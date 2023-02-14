@@ -76,8 +76,12 @@ func rollGacha() {
 		phaseGacha()
 		result := phaseCheck()
 		if result > 999 {
-			fmt.Printf("score:%v\n", result)
+			fmt.Printf("總分:%v\n", result)
+			fmt.Println("總分達到標準，停止程式")
 			break
+		} else {
+			fmt.Printf("總分:%v\n", result)
+			fmt.Println("總分未及標準，進行下一輪")
 		}
 		phaseDel()
 	}
@@ -268,7 +272,18 @@ func phaseGacha() {
 	// click mainPage (enter?)
 	// enter(?)
 	// keep esc until mainPage
-	findImageOnScreen_gachaVer("3.20", freshGuide, tolerance+0.05, false, true, false)
+	findImageOnScreen_gachaVer("3.20", mainPage, tolerance, false, false, false)
+	fmt.Printf("PhaseNum:3.21\timgPath:%s\n", mainPage)
+	for true {
+		robotgo.KeyTap("enter")
+		bitmap_screen := robotgo.CaptureScreen(0, 0, screenWidth, screenLength)
+		fx, fy := robotgo.FindPic(mainPage, bitmap_screen, tolerance)
+		if fx == -1 && fy == -1 {
+			robotgo.FreeBitmap(bitmap_screen)
+			break
+		}
+		robotgo.FreeBitmap(bitmap_screen)
+	}
 }
 
 func phaseCheck() int {
@@ -284,7 +299,7 @@ func phaseCheck() int {
 	findImageOnScreen("4.5", ok_png, tolerance, false, false, true)
 	findImageOnScreen("4.6", roleSS, tolerance, false, false, false)
 
-	fmt.Println("p4.7")
+	fmt.Println("phaseNum:4.7\tcalculateScore")
 	var score int = calculateScore(loadConfig("roleConfig.txt"))
 
 	return score
@@ -299,23 +314,23 @@ func calculateScore(roleMap map[string]int) int {
 	// 把roleConfig中每一組role做對照，確認有無並計分
 	for roleName, roleScore := range roleMap {
 		fmt.Printf("roleName:%v\t", roleName)
-		fmt.Printf("roleScore:%v\n", roleScore)
+		fmt.Printf("roleScore:%v\t", roleScore)
 
 		if roleName == "gacha-SS_pos_5" {
 			fx, fy := robotgo.FindPic("img/"+roleName+".png", bitmap_screen, tolerance)
 			if fx == -1 && fy == -1 {
-				fmt.Printf("已偵測到5號位有SS，代表有5張ss以上")
+				fmt.Printf("at least 5 ss\n")
 				score = score + roleScore
 			} else {
-				fmt.Printf("未偵測到5號位有ss，代表ss不足5張")
+				fmt.Printf("lower then 5 ss\n")
 			}
 		} else {
 			fx, fy := robotgo.FindPic("img/"+roleName+".png", bitmap_screen, tolerance)
 			if fx != -1 && fy != -1 {
-				fmt.Printf("已偵測到:%s\n", roleName)
+				fmt.Printf("true\n")
 				score = score + roleScore
 			} else {
-				fmt.Printf("未偵測到:%s\n", roleName)
+				fmt.Printf("false\n")
 			}
 		}
 	}
@@ -370,10 +385,3 @@ func exitEvent() {
 		os.Exit(0)
 	}
 }
-
-// func errHandler(err error, msg string) {
-// 	if err != nil {
-// 		fmt.Println(msg)
-// 		panic(err)
-// 	}
-// }
