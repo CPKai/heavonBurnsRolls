@@ -13,6 +13,7 @@ var (
 	tolerance       float64 = 0.2
 	chooseLang      string  = "img/step-chooseLang.png"
 	nextPng         string  = "img/step-next.png"
+	endTuPng        string  = "img/step-endTutorial.png"
 	firstGacha      string  = "img/step-firstGacha.png"
 	firstGacha2     string  = "img/step-firstGacha2.png"
 	storyChoose     string  = "img/step-storyChoose.png"
@@ -24,7 +25,6 @@ var (
 	bluePool        string  = "img/gacha-bluePool.png"
 	ok_png          string  = "img/step-ok.png"
 	mainPage        string  = "img/step-mainPage.png"
-	target_role_1   string  = "img/role-angel.png"
 	team            string  = "img/step-team.png"
 	teamFilter      string  = "img/step-teamFilter.png"
 	teamFilterSS    string  = "img/step-teamFilterSS.png"
@@ -49,6 +49,13 @@ var (
 	returnFirstPage string  = "img/step-returnFirstPage.png"
 	gachaResult     string  = "img/gacha-result.png"
 	freshGuide      string  = "img/step-freshGuide.png"
+	fiveSSPos       string  = "img/gacha-SS_pos_5.png"
+	roleSS          string  = "img/role-ss.png"
+	target_role_1   string  = "img/role-angel.png"
+	target_role_2   string  = "img/role-buffer1.png"
+	target_role_3   string  = "img/role-blaster2.png"
+	target_role_4   string  = "img/role-blaster1.png"
+	// dataMap         map[string]int = loadConfig("config.txt")
 )
 
 func main() {
@@ -70,6 +77,7 @@ func rollGacha() {
 		// PHASE_DEL     int    = 4
 		// target_role_1 string = "img/role-angel.png"
 	)
+
 	for true {
 		round_counter++
 		fmt.Printf("current round:%d\n", round_counter)
@@ -77,13 +85,40 @@ func rollGacha() {
 		phaseStory()
 		phaseGacha()
 		result := phaseCheck()
-		if result > 0 {
-			fmt.Println("積分1")
+		if result > 999 {
+			fmt.Printf("score:%v\n", result)
 			break
 		}
 		phaseDel()
 	}
 
+}
+
+// func loadConfig(csvPath string) map[string]int {
+
+// 	dataMap := make(map[string]int, 13)
+// 	csvFile, err := os.Open(csvPath)
+// 	errHandler(err, "ErrCode 003001. Open CSV file failed.")
+
+// 	defer csvFile.Close()
+
+// 	csvLines, err := csv.NewReader(csvFile).ReadAll()
+// 	errHandler(err, "ErrCode 003002. Read CSV file failed.")
+
+// 	for _, line := range csvLines {
+// 		tempInt, err := strconv.ParseInt(line[1], 10, 64)
+// 		errHandler(err, "ErrCode 003003. Convert string to float error.")
+// 		dataMap[line[0]] = int(tempInt)
+// 	}
+
+// 	return dataMap
+// }
+
+func errHandler(err error, msg string) {
+	if err != nil {
+		fmt.Println(msg)
+		panic(err)
+	}
 }
 
 func findImageOnScreen(phaseNum string, imgPath string, sp_tolerance float64, useESC bool, useEnter bool, clickTarget bool) {
@@ -150,14 +185,12 @@ func phaseBegin() {
 
 func phaseStory() {
 	findImageOnScreen("2.1", nextPng, tolerance, false, true, true)
-	findImageOnScreen("2.2", nextPng, tolerance, false, false, true)
-	robotgo.Sleep(2)
+	// robotgo.Sleep(1)
+	findImageOnScreen("2.2", endTuPng, tolerance, false, true, false)
 	robotgo.KeyTap("esc")
-	robotgo.Sleep(2)
-	robotgo.KeyTap("enter")
 
 	// step - firstGacha
-	findImageOnScreen("2.3", firstGacha, tolerance, false, false, true)
+	findImageOnScreen("2.3", firstGacha, tolerance, false, true, true)
 
 	// stop - firstGacha2
 	robotgo.Sleep(2)
@@ -245,7 +278,7 @@ func phaseGacha() {
 	// click mainPage (enter?)
 	// enter(?)
 	// keep esc until mainPage
-	findImageOnScreen_gachaVer("3.20", freshGuide, tolerance, false, true, false)
+	findImageOnScreen_gachaVer("3.20", freshGuide, tolerance+0.05, false, true, false)
 }
 
 func phaseCheck() int {
@@ -259,18 +292,56 @@ func phaseCheck() int {
 	findImageOnScreen("4.4", teamFilterSS, tolerance, false, false, true)
 	robotgo.Sleep(1)
 	findImageOnScreen("4.5", ok_png, tolerance, false, false, true)
-	robotgo.Sleep(3)
+	findImageOnScreen("4.6", roleSS, tolerance, false, false, false)
 
-	fmt.Println("p4.6")
+	fmt.Println("p4.7")
+	score := 0
+
 	bitmap_screen := robotgo.CaptureScreen(0, 0, screenWidth, screenLength)
+
 	fx, fy := robotgo.FindPic(target_role_1, bitmap_screen, tolerance)
 	if fx != -1 && fy != -1 {
-		robotgo.FreeBitmap(bitmap_screen)
-		return 1
+		fmt.Println("已偵測到:Angel")
+		score = score + 1000
+	} else {
+		fmt.Println("未偵測到:Angel")
 	}
+
+	fx, fy = robotgo.FindPic(target_role_2, bitmap_screen, tolerance)
+	if fx != -1 && fy != -1 {
+		fmt.Println("已偵測到:星羅")
+		score = score + 100
+	} else {
+		fmt.Println("未偵測到:星羅")
+	}
+
+	fx, fy = robotgo.FindPic(target_role_3, bitmap_screen, tolerance)
+	if fx != -1 && fy != -1 {
+		fmt.Println("已偵測到:金毛忍者")
+		score = score + 20
+	} else {
+		fmt.Println("未偵測到:金毛忍者")
+	}
+
+	fx, fy = robotgo.FindPic(target_role_4, bitmap_screen, tolerance)
+	if fx != -1 && fy != -1 {
+		fmt.Println("已偵測到:禮服白河")
+		score = score + 20
+	} else {
+		fmt.Println("未偵測到:禮服白河")
+	}
+
+	fx, fy = robotgo.FindPic(fiveSSPos, bitmap_screen, tolerance-0.1)
+	if fx == -1 && fy == -1 {
+		fmt.Println("已偵測到:5 SS")
+		score = score + 1000
+	} else {
+		fmt.Println("未偵測到:5 SS")
+	}
+
 	robotgo.FreeBitmap(bitmap_screen)
 
-	return 0
+	return score
 }
 
 func phaseDel() {
