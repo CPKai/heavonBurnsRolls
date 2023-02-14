@@ -50,7 +50,6 @@ var (
 	teachHand14     string  = "img/step-teachHand14.png"
 	returnFirstPage string  = "img/step-returnFirstPage.png"
 	gachaResult     string  = "img/gacha-result.png"
-	freshGuide      string  = "img/step-freshGuide.png"
 	roleSS          string  = "img/role-ss.png"
 )
 
@@ -68,7 +67,7 @@ func rollGacha() {
 		round_counter int = 0
 	)
 
-	for true {
+	for {
 		round_counter++
 		fmt.Printf("current round:%d\n", round_counter)
 		phaseBegin()
@@ -118,7 +117,7 @@ func errHandler(err error, msg string) {
 func findImageOnScreen(phaseNum string, imgPath string, sp_tolerance float64, useESC bool, useEnter bool, clickTarget bool) {
 	fmt.Printf("phaseNum:%v\t", phaseNum)
 	fmt.Printf("imgPath:%s\n", imgPath)
-	for true {
+	for {
 		if useESC {
 			robotgo.KeyTap("esc")
 			robotgo.Sleep(1)
@@ -146,7 +145,7 @@ func findImageOnScreen(phaseNum string, imgPath string, sp_tolerance float64, us
 func findImageOnScreen_gachaVer(phaseNum string, imgPath string, sp_tolerance float64, useESC bool, useEnter bool, clickTarget bool) {
 	fmt.Printf("phaseNum:%v\t", phaseNum)
 	fmt.Printf("imgPath:%s\n", imgPath)
-	for true {
+	for {
 		if useESC {
 			robotgo.KeyTap("esc")
 			// robotgo.Sleep(1)
@@ -274,7 +273,7 @@ func phaseGacha() {
 	// keep esc until mainPage
 	findImageOnScreen_gachaVer("3.20", mainPage, tolerance, false, false, false)
 	fmt.Printf("PhaseNum:3.21\timgPath:%s\n", mainPage)
-	for true {
+	for {
 		robotgo.KeyTap("enter")
 		bitmap_screen := robotgo.CaptureScreen(0, 0, screenWidth, screenLength)
 		fx, fy := robotgo.FindPic(mainPage, bitmap_screen, tolerance)
