@@ -74,7 +74,7 @@ func rollGacha() {
 		phaseStory()
 		phaseGacha()
 		result := phaseCheck()
-		if result > 999 {
+		if result > 1099 {
 			fmt.Printf("總分:%v\n", result)
 			fmt.Println("總分達到標準，停止程式")
 			break
@@ -283,6 +283,7 @@ func phaseGacha() {
 		}
 		robotgo.FreeBitmap(bitmap_screen)
 	}
+	robotgo.Sleep(2)
 }
 
 func phaseCheck() int {
@@ -324,7 +325,7 @@ func calculateScore(roleMap map[string]int) int {
 				fmt.Printf("lower then 5 ss\n")
 			}
 		} else {
-			fx, fy := robotgo.FindPic("img/"+roleName+".png", bitmap_screen, tolerance)
+			fx, fy := robotgo.FindPic("img/"+roleName+".png", bitmap_screen, tolerance+0.1)
 			if fx != -1 && fy != -1 {
 				fmt.Printf("true\n")
 				score = score + roleScore

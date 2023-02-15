@@ -5,4 +5,3 @@ role-oriLee,100
 role-dressBaiHo,20
 role-oriShenchi,10
 role-oriTsunJin,10
-gacha-SS_pos_5,1000
